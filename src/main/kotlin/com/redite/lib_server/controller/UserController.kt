@@ -14,11 +14,14 @@ class UserController {
     @Autowired
     lateinit var userRepository: UserRepository
 
-
+    @RequestMapping("/findpasswordbyname")
+    fun findPasswordByName(name: String): String{
+        return userRepository.findPasswordByName(name)
+    }
 
     @RequestMapping("/findByName")
-    fun finUser(name:String): User{
-        return userRepository.findUser(name);
+    fun findUser(name:String): User{
+        return userRepository.findUser(name)
 
     }
 
@@ -36,9 +39,6 @@ class UserController {
     @RequestMapping("/add")
     fun add(@Param("name")name: String, @Param("password")psd: String): String {
         //psd为url里面写的，@Param是注明对应的column
-        userRepository.deleteById(3)
-        userRepository.deleteById(4)
-        userRepository.deleteById(5)
         val user = User(userID = null, name = name, password = psd)
 
         userRepository.save(user)

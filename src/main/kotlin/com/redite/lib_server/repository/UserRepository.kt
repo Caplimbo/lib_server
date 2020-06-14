@@ -21,8 +21,11 @@ interface UserRepository : JpaRepository<User, Int> {
     fun updatePasswordByName(@Param("name") name: String, @Param("password") password: String)
 
     @Modifying
-    @Query("delete form User u where u.name = :name")
+    @Query("delete from User u where u.name = :name")
     fun deleteByName(@Param("name") name: String)
+
+    @Query("select u.password from User u where u.name = :name")
+    fun findPasswordByName(@Param("name") name: String): String
 
 
 }
