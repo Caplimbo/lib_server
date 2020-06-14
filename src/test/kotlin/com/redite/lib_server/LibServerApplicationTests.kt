@@ -1,0 +1,13 @@
+package com.redite.lib_server
+
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+
+@SpringBootTest
+class LibServerApplicationTests {
+
+    @Test
+    fun contextLoads() {
+    }
+
+}
