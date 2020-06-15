@@ -64,8 +64,8 @@ class UserController {
     }
 
     @RequestMapping("/revisetokenbyid")
-    fun reviseTokenByID(@Param("userID") userId: Int, @Param("token") token: String): String {
-        userRepository.updateTokenByID(userId, token)
+    fun reviseTokenByID(@Param("userID") userID: Int, @Param("token") token: String): String {
+        userRepository.updateTokenByID(userID, token)
         return "Token Revised"
     }
 
@@ -81,7 +81,7 @@ class UserController {
         val user = User(userID = -1, name = name, password = password)
         userRepository.save(user)
         val userId = userRepository.findByName(name).userID
-        val token = registerToRongCloud(userId.toString(),name,"")
+        val token = registerToRongCloud(userId.toString(),name,"sdasda")
         reviseTokenByID(userId, token)
         return userId
     }
