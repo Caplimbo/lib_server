@@ -1,5 +1,7 @@
 package com.redite.lib_server.entity
 
+import io.rong.models.response.TokenResult
+import io.rong.models.user.UserModel
 import javax.persistence.*
 
 
