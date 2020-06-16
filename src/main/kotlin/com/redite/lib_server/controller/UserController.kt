@@ -73,6 +73,12 @@ class UserController {
         return "Token Revised"
     }
 
+    @RequestMapping("/revisetokenbyid")
+    fun reviseStatusByID(@Param("userID") userId: Int, @Param("status") status: UserStatus): String {
+        userRepository.updateStatusByID(userId,status)
+        return "Status Revised"
+    }
+
     @RequestMapping("all")
     fun findAll(): MutableList<User>{
         return userRepository.findAll()
@@ -91,19 +97,19 @@ class UserController {
     }
 
     @RequestMapping("/reviseinfobyid")
-    fun reviseInfoByID(@Param("userID") userId: Int, @Param("phone") phone:String?, @Param("email") email: String?,
-    @Param("gender") gender: Boolean?, @Param("faversubject") favorsubject:String?):String{
+    fun reviseInfoByID(@Param("userID") userid: Int, @Param("phone") phone:String?, @Param("email") email: String?,
+    @Param("gender") gender: Boolean?, @Param("favorsubject") favorsubject:String?):String{
         if(phone != null){
-            userRepository.updatePhoneByID(userId, phone)
+            userRepository.updatePhoneByID(userid, phone)
         }
         if(email != null){
-            userRepository.updateEmailByID(userId, email)
+            userRepository.updateEmailByID(userid, email)
         }
         if(gender != null){
-            userRepository.updateGenderByID(userId, gender)
+            userRepository.updateGenderByID(userid, gender)
         }
         if(favorsubject != null){
-            userRepository.updateFavorSubjectByID(userId,favorsubject)
+            userRepository.updateFavorSubjectByID(userid,favorsubject)
         }
         return "Info Revised"
     }

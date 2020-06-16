@@ -1,6 +1,7 @@
 package com.redite.lib_server.repository
 
 import com.redite.lib_server.entity.User
+import com.redite.lib_server.others.UserStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -52,6 +53,11 @@ interface UserRepository : JpaRepository<User, Int> {
     @Modifying
     @Query("update User u set u.token = :token where u.userID = :userID")
     fun updateTokenByID(@Param("userID") userID: Int, @Param("token") token: String)
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.status = :status where u.userID = :userID")
+    fun updateStatusByID(@Param("userID") userID: Int, @Param("status") status: UserStatus)
 
     @Transactional
     @Modifying
