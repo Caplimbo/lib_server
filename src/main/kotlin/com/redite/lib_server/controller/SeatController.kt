@@ -1,6 +1,7 @@
 package com.redite.lib_server.controller
 
 import com.redite.lib_server.entity.Seat
+import com.redite.lib_server.entity.User
 import com.redite.lib_server.repository.SeatRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.query.Param
@@ -13,7 +14,6 @@ import java.util.*
 class SeatController {
     @Autowired
     lateinit var seatRepository: SeatRepository
-
 
     //根据时段筛选
     @RequestMapping("/getspareseats/tomorrow")
@@ -31,18 +31,20 @@ class SeatController {
 
     // 设置占座
     @RequestMapping("setseatoccupied")
-    fun setSeatOccupied(@Param("seatid") seatid: Int) {
+    fun setSeatOccupied(@Param("seatid") seatid: Int): Int {
         seatRepository.updateSeatStatusWhenOccupy(seatid)
+        val seat = seatRepository.findBySeatID(seatid)
+        return if (seat.todaystart1 < seat.todaystart2) seat.todaystart1 else seat.todaystart2
     }
 
     // 设置暂离
-    @RequestMapping("setseatleave")
+    @RequestMapping("setseat/leave")
     fun setSeatLeave(@Param("seatid") seatid: Int) {
         seatRepository.updateSeatStatusWhenLeave(seatid)
     }
 
     // 设置结束
-    @RequestMapping("setseatfinish")
+    @RequestMapping("setseat/finish")
     fun setSeatFinish(@Param("seatid") seatid: Int) {
         seatRepository.updateSeatStatusWhenFinish(seatid)
     }

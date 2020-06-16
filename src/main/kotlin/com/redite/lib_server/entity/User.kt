@@ -1,5 +1,6 @@
 package com.redite.lib_server.entity
 
+import com.redite.lib_server.others.UserStatus
 import io.rong.models.response.TokenResult
 import io.rong.models.user.UserModel
 import javax.persistence.*
@@ -24,5 +25,9 @@ data class User(
         @Column(nullable = true)
         var token: String? = "",  // for test only set as nullable
         @Column(nullable = true)
-        var favorsubject:String? = ""
+        var favorsubject: String? = "",
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        var status: UserStatus
+
 )
