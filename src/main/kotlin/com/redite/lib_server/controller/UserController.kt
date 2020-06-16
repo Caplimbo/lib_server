@@ -100,7 +100,7 @@ class UserController {
             userRepository.updateGenderByID(userId, gender)
         }
         if(favorsubject != null){
-            userRepository.updataFavorSubjectByID(userId,favorsubject)
+            userRepository.updateFavorSubjectByID(userId,favorsubject)
         }
         return "Info Revised"
     }
