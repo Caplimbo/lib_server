@@ -22,5 +22,7 @@ data class User(
         @Column(nullable = true)
         var gender: Boolean? = null,
         @Column(nullable = true)
-        var token: String? = ""  // for test only set as nullable
+        var token: String? = "",  // for test only set as nullable
+        @Column(nullable = true)
+        var favorsubject:String? = ""
 )

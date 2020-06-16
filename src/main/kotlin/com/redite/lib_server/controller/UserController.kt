@@ -39,11 +39,12 @@ class UserController {
         return userRepository.findPasswordByName(name)
     }
 
+    /*
     @RequestMapping("/revisepasswordbyid")
     fun revisePasswordByID(@Param("userID") userId: Int, @Param("password") password: String): String {
         userRepository.updatePasswordByID(userId, password)
         return "Password Revised"
-    }
+    }*/
 
     @RequestMapping("/revisegenderbyid")
     fun reviseGenderByID(@Param("userID") userId: Int, @Param("gender") gender: Boolean): String {
@@ -64,8 +65,8 @@ class UserController {
     }
 
     @RequestMapping("/revisetokenbyid")
-    fun reviseTokenByID(@Param("userID") userID: Int, @Param("token") token: String): String {
-        userRepository.updateTokenByID(userID, token)
+    fun reviseTokenByID(@Param("userID") userId: Int, @Param("token") token: String): String {
+        userRepository.updateTokenByID(userId, token)
         return "Token Revised"
     }
 
@@ -81,9 +82,27 @@ class UserController {
         val user = User(userID = -1, name = name, password = password)
         userRepository.save(user)
         val userId = userRepository.findByName(name).userID
-        val token = registerToRongCloud(userId.toString(),name,"sdasda")
+        val token = registerToRongCloud(userId.toString(),name,"null")
         reviseTokenByID(userId, token)
         return userId
+    }
+
+    @RequestMapping("/reviseinfobyid")
+    fun reviseInfoByID(@Param("userID") userId: Int, @Param("phone") phone:String?, @Param("email") email: String?,
+    @Param("gender") gender: Boolean?, @Param("faversubject") favorsubject:String?):String{
+        if(phone != null){
+            userRepository.updatePhoneByID(userId, phone)
+        }
+        if(email != null){
+            userRepository.updateEmailByID(userId, email)
+        }
+        if(gender != null){
+            userRepository.updateGenderByID(userId, gender)
+        }
+        if(favorsubject != null){
+            userRepository.updataFavorSubjectByID(userId,favorsubject)
+        }
+        return "Info Revised"
     }
 }
 
