@@ -1,13 +1,8 @@
 package com.redite.lib_server.controller
 
-import com.redite.lib_server.entity.Friend
 import com.redite.lib_server.entity.Invite
-import com.redite.lib_server.entity.User
-import com.redite.lib_server.repository.FriendRepository
 import com.redite.lib_server.repository.InviteRepository
-import com.redite.lib_server.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.query.Param
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -35,5 +30,4 @@ class InviteController {
         inviteRepository.save(invite)
         return "add successful"
     }
-
 }
