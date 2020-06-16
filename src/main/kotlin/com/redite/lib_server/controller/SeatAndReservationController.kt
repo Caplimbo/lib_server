@@ -17,7 +17,7 @@ class SeatAndReservationController {
     lateinit var seatRepository: SeatRepository
 
     @RequestMapping("/findseatwithadjacentreservation")
-    fun findSeatWithAdjacentReservation(starttime: Int, endtime: Int, subject: String?, gender: Boolean?): HashMap<Int, Reservation> {
+    fun findSeatWithAdjacentReservation(starttime: Int, endtime: Int, subject: String?, gender: Boolean?): HashMap<Int, List<Int>> {
         val spareSeats = seatRepository.findSpareSeatByTimePeriod(starttime, endtime)
                 ?: throw Exception("No spare Seats!")  // seatid 列表
         val validReservations = if (gender == null) {
@@ -30,12 +30,12 @@ class SeatAndReservationController {
         }
         else reservationRepository.findReservationsBySubjectAndGenderAndTime(subject, gender, starttime, endtime)
 
-        val validSeatIDWithRespectiveReservation = hashMapOf<Int, Reservation>()
+        val validSeatIDWithRespectiveReservation = hashMapOf<Int, List<Int>>()
         for (reservation in validReservations) {
             var seatID = reservation.seatID
             if (seatID % 2 == 1) seatID += 1
             else seatID -= 1
-            if (seatID in spareSeats) validSeatIDWithRespectiveReservation[seatID] = reservation
+            if (seatID in spareSeats) validSeatIDWithRespectiveReservation[seatID] = listOf(reservation.userID, reservation.reservationid)
         }
         return validSeatIDWithRespectiveReservation
     }

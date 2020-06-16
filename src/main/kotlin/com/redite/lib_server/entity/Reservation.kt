@@ -1,6 +1,8 @@
 package com.redite.lib_server.entity
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.redite.lib_server.others.SeatStatus
+import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 import javax.persistence.*
 
@@ -15,6 +17,8 @@ class Reservation (
         @Column(nullable = false)
         var seatID:Int,
         @Temporal(TemporalType.TIMESTAMP)
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         @Column(nullable = false)
         var ordertime: Date,
         @Column(nullable = false)
@@ -26,8 +30,9 @@ class Reservation (
         @Column(nullable = false, columnDefinition = "bool default true")
         var hang: Boolean,  // 是否正在等待配对
         @Column(nullable = true)
-        var subject:String?, // 科目选择
+        var subject:String? = "", // 科目选择
         @Column(nullable = true)
-        var gender:Boolean? //true for male
-
+        var gender:Boolean? = null, //true for male
+        @Column(nullable = true)
+        var companion: Int? = 0
 )

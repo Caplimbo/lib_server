@@ -70,4 +70,5 @@ interface UserRepository : JpaRepository<User, Int> {
     fun updateFavorSubjectByID(@Param("userID") userID: Int, @Param("favorsubject") favorsubject:String)
 
 
+
 }
