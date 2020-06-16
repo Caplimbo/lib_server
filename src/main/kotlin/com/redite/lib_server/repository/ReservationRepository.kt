@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.Entity
 
 interface ReservationRepository : JpaRepository<Reservation, Int> {
     fun findByReservationid(reservationID: Int): Reservation
@@ -41,7 +42,7 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     @Transactional
     @Modifying
     @Query("update Reservation r set r.hang = false, r.companion = :companion where r.reservationid = :reservationid")
-    fun updateHangingStatusAndSetCompanion(@Param("reservationid") reservationID: Int, @Param("campanion") companion: Int?)
+    fun updateHangingStatusAndSetCompanion(@Param("reservationid") reservationID: Int, @Param("companion") companion: Int?)
 
 
     // 设置
