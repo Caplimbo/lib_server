@@ -3,6 +3,7 @@ package com.redite.lib_server.controller
 import com.redite.lib_server.entity.Friend
 import com.redite.lib_server.entity.User
 import com.redite.lib_server.repository.FriendRepository
+import com.redite.lib_server.others.UserStatus
 import com.redite.lib_server.repository.UserRepository
 import com.redite.lib_server.rongcloud.registerToRongCloud
 import org.springframework.beans.factory.annotation.Autowired
@@ -81,7 +82,7 @@ class UserController {
     @RequestMapping("/add")
     fun add(@Param("name")name: String, @Param("password")password: String): Int {
         //psd为url里面写的，@Param是注明对应的column
-        val user = User(userID = -1, name = name, password = password)
+        val user = User(userID = -1, name = name, password = password, status = UserStatus.FREE)
         userRepository.save(user)
         val userId = userRepository.findByName(name).userID
         val token = registerToRongCloud(userId.toString(),name,"null")

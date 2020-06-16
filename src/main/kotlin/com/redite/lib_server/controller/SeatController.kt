@@ -31,8 +31,10 @@ class SeatController {
 
     // 设置占座
     @RequestMapping("setseatoccupied")
-    fun setSeatOccupied(@Param("seatid") seatid: Int) {
+    fun setSeatOccupied(@Param("seatid") seatid: Int): Int {
         seatRepository.updateSeatStatusWhenOccupy(seatid)
+        val seat = seatRepository.findBySeatID(seatid)
+        return if (seat.todaystart1 < seat.todaystart2) seat.todaystart1 else seat.todaystart2
     }
 
     // 设置暂离

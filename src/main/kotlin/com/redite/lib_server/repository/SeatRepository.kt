@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 
-interface SeatRepository : JpaRepository<Seat, String> {
+interface SeatRepository : JpaRepository<Seat, Int> {
     fun findBySeatID(seatID: Int): Seat
 
 
@@ -27,6 +27,7 @@ interface SeatRepository : JpaRepository<Seat, String> {
     @Modifying
     @Query("update Seat s set s.free = false, s.status = 'OCCUPIED' where s.seatID = :seatID")
     fun updateSeatStatusWhenOccupy(@Param("seatID") seatID: Int)
+
 
     // 现场暂离处理
     @Transactional
