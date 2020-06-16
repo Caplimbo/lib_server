@@ -1,21 +1,40 @@
 package com.redite.lib_server.repository
 
+import com.redite.lib_server.entity.Reservation
 import com.redite.lib_server.entity.Seat
-import com.redite.lib_server.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 
-interface SeatRepository : JpaRepository<Seat, Int> {
-    fun findBySeatID(seatID: Int): Seat
+interface ReservationRepository : JpaRepository<Reservation, Int> {
+    fun findByReservationID(reservationID: Int): Reservation
 
 
-    // 为预约寻找空座位
-    @Query("select s.seatID from Seat s where (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
-            "and (s.tomorrowstart2 >= :endtime or s.tomorrowend2 <= :starttime)")
-    fun findSpareSeatByTimePeriod(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Int>?
+    // 只按照时间寻找
+    @Query("from Reservation v where v.starttime between (:starttime+1) AND (:endtime-1) " +
+            "or v.endtime between (:starttime+1) AND (:endtime-1)")
+    fun findReservationsByTime(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
+
+    // 按照性别条件寻找
+    @Query("from Reservation v where v.gender = :gender and v.starttime between (:starttime+1) AND (:endtime-1) " +
+            "or v.endtime between (:starttime+1) AND (:endtime-1)")
+    fun findReservationsByGenderAndTime(@Param("gender") gender: Boolean, @Param("starttime")
+    starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
+
+
+    // 按照科目条件寻找
+    @Query("from Reservation v where v.subject = :subject and v.starttime between (:starttime+1) AND (:endtime-1) " +
+            "or v.endtime between (:starttime+1) AND (:endtime-1)")
+    fun findReservationsBySubjectAndTime(@Param("subject") subject: String, @Param("starttime")
+    starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
+
+    // 按照性别和科目条件寻找
+    @Query("from Reservation v where v.subject = :subject and v.gender = :gender and v.starttime between (:starttime+1) AND (:endtime-1)" +
+            " or v.endtime between (:starttime+1) AND (:endtime-1)")
+    fun findReservationsBySubjectAndGenderAndTime(@Param("subject") subject: String, @Param("gender") gender: Boolean,
+                                                  @Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
 
     // 为实时展示寻找空座位
     @Query("select s.seatID from Seat s where s.free = true and :nowtime not between s.todaystart1 and s.todayend1 " +
@@ -46,5 +65,6 @@ interface SeatRepository : JpaRepository<Seat, Int> {
     @Modifying
     @Query("update Seat s set s.tomorrowstart2 = case when (s.tomorrowstart1 <> 0 and s.tomorrowstart2 = 0) then :starttime else s.tomorrowstart2 END, s.tomorrowend2 = case when (s.tomorrowend1 <> 0 and s.tomorrowend2 = 0) then :endtime else s.tomorrowend2 END, s.tomorrowend1 = case when (s.tomorrowend1 = 0) then :endtime else s.tomorrowend1 END, s.tomorrowstart1 = case when (s.tomorrowstart1 = 0) then :starttime else s.tomorrowstart1 END where s.seatID = :seatID")
     fun updateSeatStatusWhenBook(@Param("seatID") seatID: Int, @Param("starttime") starttime:Int, @Param("endtime") endtime: Int)
+
 
 }

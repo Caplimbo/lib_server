@@ -36,6 +36,11 @@ interface UserRepository : JpaRepository<User, Int> {
 
     @Transactional
     @Modifying
+    @Query("update User u set u.password = :password where u.userID = :userID")
+    fun updatePasswordByID(@Param("userID") userID: Int, @Param("password") password: String)
+
+    @Transactional
+    @Modifying
     @Query("update User u set u.gender = :gender where u.userID = :userID")
     fun updateGenderByID(@Param("userID") userID: Int, @Param("gender") gender: Boolean)
 

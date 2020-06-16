@@ -5,11 +5,11 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "order")
-class Order (
+@Table(name = "reservation")
+class Reservation (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var orderID: Int,
+        var reservationid: Int,
         @Column(nullable = false)
         var userID: Int,
         @Column(nullable = false)

@@ -14,6 +14,6 @@ interface InviteRepository: JpaRepository<Invite, Int> {
 
     @Transactional
     @Modifying
-    @Query("delete from invite where receiveID = :receiveID", nativeQuery = true)
+    @Query("delete from Invite v where v.receiveID = :receiveID")
     fun deleteByReceiveID(@Param("receiveID") userID: Int)
 }
