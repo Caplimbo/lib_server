@@ -26,6 +26,7 @@ class SeatController {
     @RequestMapping("/getspareseats/now")
     fun getSpareSeatsForNow(): MutableList<Int>? {
         val nowtime = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        if (nowtime < 8 || nowtime >= 23) throw Exception("Invalid time")
         return seatRepository.findSpareSeatNow(nowtime)
     }
 
