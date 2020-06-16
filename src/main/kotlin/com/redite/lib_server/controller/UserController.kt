@@ -1,6 +1,8 @@
 package com.redite.lib_server.controller
 
+import com.redite.lib_server.entity.Friend
 import com.redite.lib_server.entity.User
+import com.redite.lib_server.repository.FriendRepository
 import com.redite.lib_server.repository.UserRepository
 import com.redite.lib_server.rongcloud.registerToRongCloud
 import org.springframework.beans.factory.annotation.Autowired
