@@ -17,6 +17,10 @@ interface SeatRepository : JpaRepository<Seat, Int> {
             "and (s.tomorrowstart2 >= :endtime or s.tomorrowend2 <= :starttime)")
     fun findSpareSeatByTimePeriod(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Int>?
 
+    @Query("select s.seatID from Seat s where s.wait = false and (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
+            "and (s.tomorrowstart2 >= :endtime or s.tomorrowend2 <= :starttime)")
+    fun findSpareSeatByTimePeriodwithWaitExcluded(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Int>?
+
     // 为实时展示寻找空座位
     @Query("select s.seatID from Seat s where s.free = true and :nowtime not between s.todaystart1 and s.todayend1 " +
             "and :nowtime not between s.todaystart2 and s.todayend2")
@@ -47,4 +51,9 @@ interface SeatRepository : JpaRepository<Seat, Int> {
     @Query("update Seat s set s.tomorrowstart2 = case when (s.tomorrowstart1 <> 0 and s.tomorrowstart2 = 0) then :starttime else s.tomorrowstart2 END, s.tomorrowend2 = case when (s.tomorrowend1 <> 0 and s.tomorrowend2 = 0) then :endtime else s.tomorrowend2 END, s.tomorrowend1 = case when (s.tomorrowend1 = 0) then :endtime else s.tomorrowend1 END, s.tomorrowstart1 = case when (s.tomorrowstart1 = 0) then :starttime else s.tomorrowstart1 END where s.seatID = :seatID")
     fun updateSeatStatusWhenBook(@Param("seatID") seatID: Int, @Param("starttime") starttime:Int, @Param("endtime") endtime: Int)
 
+    // 设置座位wait状态
+    @Transactional
+    @Modifying
+    @Query("update Seat s set s.wait = true where s.seatID = :seatID")
+    fun updateSeatStatusWhenAdjacentBeReserved(@Param("seatID") seatID: Int)
 }

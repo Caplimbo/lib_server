@@ -19,7 +19,11 @@ class SeatController {
     @RequestMapping("/getspareseats/tomorrow")
     fun getSpareSeatsForOrder(starttime: Int, endtime: Int): MutableList<Int>? {
         if (starttime >= endtime || starttime < 8 || endtime > 23) throw Exception("invalid time period")
-        else return seatRepository.findSpareSeatByTimePeriod(starttime, endtime)
+        val firstTrySeats = seatRepository.findSpareSeatByTimePeriodwithWaitExcluded(starttime, endtime)
+        return if (firstTrySeats == mutableListOf<Int>()) {
+            seatRepository.findSpareSeatByTimePeriod(starttime, endtime)
+        }
+        else firstTrySeats
     }
 
     // 现在座位情况
@@ -73,6 +77,11 @@ class SeatController {
         return adjacentSpareSeatList
     }
 
+    // 当相邻位置被有条件预定时，用来更新这个座位的状态
+    @RequestMapping("/setseatwait")
+    fun setSeatWait(seatid: Int) {
+        seatRepository.updateSeatStatusWhenAdjacentBeReserved(seatid)
+    }
 
 
 

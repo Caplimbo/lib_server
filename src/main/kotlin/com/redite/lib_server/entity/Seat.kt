@@ -13,6 +13,8 @@ class Seat (
     var status: SeatStatus,
     @Column(name = "free", nullable = false, columnDefinition="bool default true")
     var free: Boolean = true,
+    @Column(name = "wait", nullable = false, columnDefinition="bool default false")
+    var wait: Boolean = false,
     @Column(nullable = true, columnDefinition = "INT default 0")
     var todaystart1: Int,
     @Column(nullable = true, columnDefinition = "INT default 0")
