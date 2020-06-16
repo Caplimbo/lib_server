@@ -21,8 +21,8 @@ class FriendController {
     }
 
     @RequestMapping("/add")
-    fun add(@Param("userID")userID: Int):String{
-        friendRepository.add(userID,"")
+    fun add(@Param("userID")userID: Int, @Param("name") name: String):String{
+        friendRepository.add(userID,name)
         return "add successful"
     }
 
