@@ -23,8 +23,8 @@ class UserController {
 
     //获取用户对象
     @RequestMapping("/findbyuserid")
-    fun findUserById(userId: Int): User{
-        return userRepository.findByUserID(userId)
+    fun findUserById(userid: Int): User{
+        return userRepository.findByUserID(userid)
     }
 
     @RequestMapping("/findbyname")
@@ -33,8 +33,8 @@ class UserController {
     }
 
     @RequestMapping("/findpasswordbyid")
-    fun findPasswordByID(userId: Int): String{
-        return userRepository.findPasswordByID(userId)
+    fun findPasswordByID(userid: Int): String{
+        return userRepository.findPasswordByID(userid)
     }
 
     @RequestMapping("/findpasswordbyname")
@@ -92,7 +92,7 @@ class UserController {
         //psd为url里面写的，@Param是注明对应的column
         val user = User(userID = -1, name = name, password = password, status = UserStatus.FREE)
         userRepository.save(user)
-        val userId = userRepository.findByName(name).userID
+        val userId = user.userID
         val token = registerToRongCloud(userId.toString(),name,"null")
         reviseTokenByID(userId, token)
         return userId

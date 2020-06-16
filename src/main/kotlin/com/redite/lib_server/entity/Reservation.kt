@@ -32,7 +32,9 @@ class Reservation (
         @Column(nullable = true)
         var subject:String? = "", // 科目选择
         @Column(nullable = true)
-        var gender:Boolean? = null, //true for male
+        var targetgender: Boolean? = null,
         @Column(nullable = true)
+        var selfgender: Boolean? = null,
+        @Column(nullable = true) // 对应配对order的用户id
         var companion: Int? = 0
 )
