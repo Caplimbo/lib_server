@@ -14,26 +14,24 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     fun findReservationsByUserID(userID: Int): MutableList<Reservation>
 
     // 只按照时间寻找
-    @Query("from Reservation v where v.hang = true and v.starttime between (:starttime+1) AND (:endtime-1) " +
-            "or v.endtime between (:starttime+1) AND (:endtime-1)")
+    @Query("from Reservation v where v.hang = true and not (v.endtime < :starttime or v.starttime > :endtime)")
     fun findReservationsByTime(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
 
     // 按照性别条件寻找
     @Query("from Reservation v where v.hang = true and (v.targetgender = :selfgender or v.targetgender is null) and v.selfgender = :targetgender " +
-            "and v.starttime between (:starttime+1) AND (:endtime-1) or v.endtime between (:starttime+1) AND (:endtime-1)")
+            "and not (v.endtime < :starttime or v.starttime > :endtime)")
     fun findReservationsByGenderAndTime(@Param("targetgender") targetgender: Boolean, @Param("selfgender") selfgender: Boolean?, @Param("starttime")
     starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
 
 
     // 按照科目条件寻找
-    @Query("from Reservation v where v.hang = true and v.subject = :subject and v.starttime between (:starttime+1) AND (:endtime-1) " +
-            "or v.endtime between (:starttime+1) AND (:endtime-1)")
+    @Query("from Reservation v where v.hang = true and v.subject = :subject and not (v.endtime < :starttime or v.starttime > :endtime)")
     fun findReservationsBySubjectAndTime(@Param("subject") subject: String, @Param("starttime")
     starttime: Int, @Param("endtime") endtime: Int): MutableList<Reservation>
 
     // 按照性别和科目条件寻找
     @Query("from Reservation v where v.hang = true and v.subject = :subject and (v.targetgender = :selfgender or v.targetgender is null) and v.selfgender = :targetgender " +
-            "and v.starttime between (:starttime+1) AND (:endtime-1) or v.endtime between (:starttime+1) AND (:endtime-1)")
+            "and not (v.endtime < :starttime or v.starttime > :endtime)")
     fun findReservationsBySubjectAndGenderAndTime(@Param("subject") subject: String,
                                                   @Param("targetgender") targetgender: Boolean,
                                                   @Param("selfgender") selfgender: Boolean?,

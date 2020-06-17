@@ -19,9 +19,9 @@ class SeatController {
     @RequestMapping("/getspareseats/tomorrow")
     fun getSpareSeatsForOrder(starttime: Int, endtime: Int): MutableList<Int>? {
         if (starttime >= endtime || starttime < 8 || endtime > 23) throw Exception("invalid time period")
-        val firstTrySeats = seatRepository.findSpareSeatByTimePeriodwithWaitExcluded(starttime, endtime)
-        return if (firstTrySeats == mutableListOf<Int>()) {
-            seatRepository.findSpareSeatByTimePeriod(starttime, endtime)
+            val firstTrySeats = seatRepository.findSpareSeatByTimePeriodwithWaitExcluded(starttime, endtime)
+            return if (firstTrySeats == mutableListOf<Int>()) {
+                seatRepository.findSpareSeatByTimePeriod(starttime, endtime)
         }
         else firstTrySeats
     }
@@ -85,9 +85,15 @@ class SeatController {
 
 
 
-    @RequestMapping("all")
+    @RequestMapping("/all")
     fun findAll(): MutableList<Seat>{
         return seatRepository.findAll()
     }
+
+    @RequestMapping("/findbyid")
+    fun getSeatStatus(seatid: Int): Seat {
+        return seatRepository.findBySeatID(seatid)
+    }
+
 
 }

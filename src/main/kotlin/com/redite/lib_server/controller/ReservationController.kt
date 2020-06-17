@@ -35,8 +35,9 @@ class ReservationController {
 
     // 新建Reservation
     @RequestMapping("/add")
-    fun add(userid: Int, seatid: Int, starttime: Int, endtime: Int, pair: Boolean, hang: Boolean, subject: String?,
-            targetgender: Boolean?, selfgender: Boolean?, companion: Int?): Int {
+    fun addReservation(userid: Int, seatid: Int, starttime: Int, endtime: Int,
+                       pair: Boolean, hang: Boolean, subject: String?,
+                        targetgender: Boolean?, selfgender: Boolean?, companion: Int?): Int {
         //psd为url里面写的，@Param是注明对应的column
         val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
                 pair, hang, subject, targetgender, selfgender, companion)
@@ -46,8 +47,9 @@ class ReservationController {
 
     // 本订单找到成功匹配
     @RequestMapping("/release")
-    fun release(reservationid: Int, companion: Int?) {
+    fun release(reservationid: Int, companion: Int?): String{
         reservationRepository.updateHangingStatusAndSetCompanion(reservationid, companion)
+        return "Update Success!"
     }
 
     //查找订单
