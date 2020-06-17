@@ -92,7 +92,7 @@ class UserController {
         //psd为url里面写的，@Param是注明对应的column
         val user = User(userID = -1, name = name, password = password, status = UserStatus.FREE)
         userRepository.save(user)
-        val userId = user.userID
+        val userId = userRepository.findByName(name).userID
         val token = registerToRongCloud(userId.toString(),name,"null")
         reviseTokenByID(userId, token)
         return userId
@@ -100,7 +100,7 @@ class UserController {
 
     @RequestMapping("/reviseinfobyid")
     fun reviseInfoByID(@Param("userID") userid: Int, @Param("phone") phone:String?, @Param("email") email: String?,
-    @Param("gender") gender: Boolean?, @Param("favorsubject") favorsubject:String?, @Param("password")password: String?):String{
+                       @Param("gender") gender: Boolean?, @Param("favorsubject") favorsubject:String?, @Param("password")password: String?):String{
         if(phone != null){
             userRepository.updatePhoneByID(userid, phone)
         }

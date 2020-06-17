@@ -63,5 +63,13 @@ class ReservationController {
         return reservationRepository.findReservationsByUserID(userid)
     }
 
+    @RequestMapping("/findcompanionsbyuserid")
+    fun findCompanionsByUserID(userid: Int): MutableList<Int> {
+        return reservationRepository.findCompanionsByUserID(userid)
+    }
 
+    @RequestMapping("/finddatesbyuserid")
+    fun findDatesByUserID(userid: Int): MutableList<Date> {
+        return reservationRepository.findDatesByUserID(userid)
+    }
 }
