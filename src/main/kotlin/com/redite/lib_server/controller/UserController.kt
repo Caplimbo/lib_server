@@ -92,7 +92,7 @@ class UserController {
         //psd为url里面写的，@Param是注明对应的column
         val user = User(userID = -1, name = name, password = password, status = UserStatus.FREE)
         userRepository.save(user)
-        val userId = user.userID
+        val userId = userRepository.findByName(name).userID
         val token = registerToRongCloud(userId.toString(),name,"null")
         reviseTokenByID(userId, token)
         return userId
