@@ -72,4 +72,9 @@ class ReservationController {
     fun findDatesByUserID(userid: Int): MutableList<Date> {
         return reservationRepository.findDatesByUserID(userid)
     }
+
+    @RequestMapping("/deletebyseatidandstarttime")
+    fun deleteBySeatIDAndStarttime(seatid: Int, starttime: Int) {
+        reservationRepository.deleteBySeatIDAndStarttime(seatid, starttime)
+    }
 }

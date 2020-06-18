@@ -56,4 +56,9 @@ interface SeatRepository : JpaRepository<Seat, Int> {
     @Modifying
     @Query("update Seat s set s.wait = true where s.seatID = :seatID")
     fun updateSeatStatusWhenAdjacentBeReserved(@Param("seatID") seatID: Int)
+
+    @Transactional
+    @Modifying
+    @Query("update Seat s set s.tomorrowstart2 = case when (s.tomorrowstart2 = :starttime) then 0 else s.tomorrowstart2 END, s.tomorrowend2 = case when (s.tomorrowend2 = :endtime) then 0 else s.tomorrowend2 END, s.tomorrowend1 = case when (s.tomorrowend1 = :endtime) then 0 else s.tomorrowend1 END, s.tomorrowstart1 = case when (s.tomorrowstart1 = :starttime) then 0 else s.tomorrowstart1 END where s.seatID = :seatID")
+    fun resetSeatByIDAndTime(@Param("seatID") seatID: Int, @Param("starttime") starttime: Int, @Param("endtime") endtime: Int)
 }
