@@ -68,7 +68,4 @@ interface UserRepository : JpaRepository<User, Int> {
     @Modifying
     @Query("update User u set u.favorsubject = :favorsubject where u.userID = :userID")
     fun updateFavorSubjectByID(@Param("userID") userID: Int, @Param("favorsubject") favorsubject:String)
-
-
-
 }
