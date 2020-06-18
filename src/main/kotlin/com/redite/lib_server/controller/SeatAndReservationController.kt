@@ -43,4 +43,15 @@ class SeatAndReservationController {
         }
         return validSeatIDWithRespectiveReservation
     }
+
+    @RequestMapping("deletebyreservationid")
+    fun deleteOrderAndResetSeatStatusByReservationID(reservationid: Int): String {
+        val reservation = reservationRepository.findByReservationid(reservationid)
+        val seatid = reservation.seatID
+        val starttime = reservation.starttime
+        val endtime = reservation.endtime
+        reservationRepository.deleteByReservationid(reservationid)
+        seatRepository.resetSeatByIDAndTime(seatid, starttime, endtime)
+        return "revise succeeded!"
+    }
 }
