@@ -1,5 +1,4 @@
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64.decode
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64.encode
+import org.apache.commons.codec.binary.Base64
 import java.io.ByteArrayOutputStream
 import java.security.PrivateKey
 import java.security.PublicKey
@@ -38,7 +37,7 @@ object RSACrypt {
             outputStream.write(temp)
         }
         outputStream.close()
-        return encode(outputStream.toByteArray())
+        return Base64.encodeBase64String(outputStream.toByteArray())
     }
 
     /**
@@ -66,7 +65,7 @@ object RSACrypt {
         }
 
         outputStream.close()
-        return encode(outputStream.toByteArray())
+        return Base64.encodeBase64String(outputStream.toByteArray())
     }
 
     /**
@@ -76,7 +75,7 @@ object RSACrypt {
      * 关于到底是128个字节还是256个，我也很迷糊了，我写成128的时候就报这个错误，改成256后就没事了
      */
     fun decryptByPrivateKey(str: String, privateKey: PrivateKey): String {
-        val byteArray = decode(str)
+        val byteArray = Base64.decodeBase64(str)
         val cipher = Cipher.getInstance(transformation)
         cipher.init(Cipher.DECRYPT_MODE, privateKey)
 
@@ -108,7 +107,7 @@ object RSACrypt {
      * 公钥解密
      */
     fun decryptByPublicKey(str: String, publicKey: PublicKey): String {
-        val byteArray = decode(str)
+        val byteArray = Base64.decodeBase64(str)
         val cipher = Cipher.getInstance(transformation)
         cipher.init(Cipher.DECRYPT_MODE, publicKey)
 
@@ -130,6 +129,4 @@ object RSACrypt {
         outputStream.close()
         return String(outputStream.toByteArray())
     }
-
-
 }
