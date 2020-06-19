@@ -5,6 +5,7 @@ import com.redite.lib_server.repository.ReservationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.text.SimpleDateFormat
 import java.util.*
 
 @RestController
@@ -73,8 +74,7 @@ class ReservationController {
         return reservationRepository.findDatesByUserID(userid)
     }
 
-    @RequestMapping("/deletebyseatidandstarttime")
-    fun deleteBySeatIDAndStarttime(seatid: Int, starttime: Int) {
-        reservationRepository.deleteBySeatIDAndStarttime(seatid, starttime)
-    }
+
+
+
 }

@@ -30,5 +30,9 @@ class Seat (
     @Column(nullable = true, columnDefinition = "INT default 0")
     var tomorrowend1: Int,
     @Column(nullable = true, columnDefinition = "INT default 0")
-    var tomorrowend2: Int
+    var tomorrowend2: Int,
+    @Column(nullable = true, columnDefinition = "INT default 0")
+    var reservationid1: Int,
+    @Column(nullable = true, columnDefinition = "INT default 0")
+    var reservationid2: Int
 )

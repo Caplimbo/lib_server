@@ -56,8 +56,8 @@ class SeatController {
 
     // 设置预定
     @RequestMapping("/setseat/book")
-    fun seatSeatWhenBook(@Param("seatid") seatid: Int, starttime: Int, endtime: Int) {
-        seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime)
+    fun seatSeatWhenBook(@Param("seatid") seatid: Int, starttime: Int, endtime: Int, reservationid: Int) {
+        seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime, reservationid)
     }
 
     // 寻找有相邻座位的空座，用于初次匹配没有得到结果时寻找可选的座位

@@ -9,6 +9,9 @@ import com.redite.lib_server.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 @RestController
 @RequestMapping("/seatwithreservation")
@@ -53,11 +56,8 @@ class SeatAndReservationController {
     @RequestMapping("deletebyreservationid")
     fun deleteOrderAndResetSeatStatusByReservationID(reservationid: Int): String {
         val reservation = reservationRepository.findByReservationid(reservationid)
-        val seatid = reservation.seatID
-        val starttime = reservation.starttime
-        val endtime = reservation.endtime
-        reservationRepository.deleteByReservationid(reservationid)
-        seatRepository.resetSeatByIDAndTime(seatid, starttime, endtime)
+        reservationRepository.delete(reservation)
+        seatRepository.resetSeatByReservationID(reservationid)
         return "revise succeeded!"
     }
 
@@ -79,21 +79,31 @@ class SeatAndReservationController {
             return if (s1 == 0 && s2 == 0 && e1 == 0 && e2 == 0) {
                 // 没有预定，直接成功占座，修改用户状态
                 occupySeat(seatid, userid)
-            } else if (s1 == 0 && e1 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s2, e2, now)
-            else if (s2 == 0 && e2 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s1, e1, now)
+            } else if (s1 == 0 && e1 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s2, e2, seat.reservationid2, now)
+            else if (s2 == 0 && e2 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s1, e1, seat.reservationid1, now)
             else {
-                if (minOf(e1, e2) <= now) findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), now)
-                else findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1,e2), now)
+                if (minOf(e1, e2) <= now){
+                    if (e1 < e2) findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), seat.reservationid2, now)
+                    else findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), seat.reservationid1, now)
+                }
+
+                else {
+                    if (minOf(s1, s2) <= now - 1) maxOf(s1, s2).toString()
+                    else{
+                        if (e1 < e2) findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1, e2),seat.reservationid1, now)
+                        else findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1, e2),seat.reservationid2, now)
+                    }
+                }
             }
         }
     }
 
-    fun findResultByStartAndEndAndSeatId(userid: Int, seatid: Int, starttime: Int, endtime: Int, now:Int): String {
+    fun findResultByStartAndEndAndSeatId(userid: Int, seatid: Int, starttime: Int, endtime: Int, reservationid: Int, now:Int): String {
         if (endtime <= now) { //前一个订单已经结束，占座
             return occupySeat(seatid, userid)
         }
         else {
-            val reservation = reservationRepository.findBySeatIDAndStarttime(seatid, starttime)
+            val reservation = reservationRepository.findByReservationid(reservationid)
             return when {
                 reservation.userID == userid -> { //自己的预订，直接占座
                     occupySeat(seatid, userid)
