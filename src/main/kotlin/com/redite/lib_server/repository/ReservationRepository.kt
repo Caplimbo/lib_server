@@ -63,4 +63,7 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     @Modifying
     @Query("delete from Reservation r where r.reservationid = :reservationid")
     fun deleteByReservationid(@Param("reservationid") reservationID: Int)
+
+    @Query("from Reservation r where r.seatID = :seatID and r.starttime = :starttime")
+    fun findBySeatIDAndStarttime(@Param("seatID") seatid: Int, @Param("starttime") starttime: Int): Reservation
 }

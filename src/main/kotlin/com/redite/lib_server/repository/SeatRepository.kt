@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 interface SeatRepository : JpaRepository<Seat, Int> {
     fun findBySeatID(seatID: Int): Seat
 
+    @Query("select s.free from Seat s where s.seatID = :seatID")
+    fun findFreeBySeatID(@Param("seatID") seatID: Int): Boolean
 
     // 为预约寻找空座位
     @Query("select s.seatID from Seat s where (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
