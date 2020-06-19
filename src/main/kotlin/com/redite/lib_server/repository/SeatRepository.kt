@@ -15,11 +15,11 @@ interface SeatRepository : JpaRepository<Seat, Int> {
     fun findFreeBySeatID(@Param("seatID") seatID: Int): Boolean
 
     // 为预约寻找空座位
-    @Query("select s.seatID from Seat s where (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
+    @Query("select s.seatID from Seat s where (s.tomorrowstart1 = 0 or s.tomorrowstart2 = 0) and (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
             "and (s.tomorrowstart2 >= :endtime or s.tomorrowend2 <= :starttime)")
     fun findSpareSeatByTimePeriod(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Int>?
 
-    @Query("select s.seatID from Seat s where s.wait = false and (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
+    @Query("select s.seatID from Seat s where (s.tomorrowstart1 = 0 or s.tomorrowstart2 = 0) and s.wait = false and (s.tomorrowstart1 >= :endtime or s.tomorrowend1 <= :starttime) " +
             "and (s.tomorrowstart2 >= :endtime or s.tomorrowend2 <= :starttime)")
     fun findSpareSeatByTimePeriodwithWaitExcluded(@Param("starttime") starttime: Int, @Param("endtime") endtime: Int): MutableList<Int>?
 
