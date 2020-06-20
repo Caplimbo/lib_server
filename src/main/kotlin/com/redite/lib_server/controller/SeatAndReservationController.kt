@@ -99,8 +99,10 @@ class SeatAndReservationController {
             return occupySeat(seatid, userid)
         }
         else {
-            val date = getSpecifiedDayBefore(Date().toString())
+            val date = getSpecifiedDayBefore(SimpleDateFormat("yyyy-MM-dd").format(Date()))
             val reservation = reservationRepository.findBySeatIDAndStarttimeAndDate(seatid, starttime, date)
+            println(reservation.reservationid)
+            println("fffeff")
             return when {
                 reservation.userID == userid -> { //自己的预订，直接占座
                     occupySeat(seatid, userid)
@@ -130,7 +132,7 @@ class SeatAndReservationController {
     fun book(userid: Int, seatid: Int, starttime: Int, endtime: Int,
              pair: Boolean, hang: Boolean, subject: String?,
              targetgender: Boolean?, selfgender: Boolean?, companion: Int?): String {
-        val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
+        val reservation = Reservation(0, userid, seatid, SimpleDateFormat("yyyy-MM-dd").format(Date()), starttime, endtime,
                 pair, hang, subject, targetgender, selfgender, companion)
         reservationRepository.save(reservation)
         seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime)

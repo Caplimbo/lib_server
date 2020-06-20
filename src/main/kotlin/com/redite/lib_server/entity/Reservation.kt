@@ -16,11 +16,8 @@ class Reservation (
         var userID: Int,
         @Column(nullable = false)
         var seatID:Int,
-        @Temporal(TemporalType.TIMESTAMP)
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
         @Column(nullable = false)
-        var ordertime: Date,
+        var ordertime: String,
         @Column(nullable = false)
         var starttime: Int,
         @Column(nullable = false)

@@ -92,7 +92,7 @@ class UserController {
         val keyFactory = KeyFactory.getInstance("RSA")
         val privateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(Base64.decodeBase64(privateKeyStr)))
         val decryptPassword = RSACrypt.decryptByPrivateKey(password, privateKey)
-        val user = User(userID = -1, name = name, password = decryptPassword, status = UserStatus.FREE)
+        val user = User(userID = -1, name = name, password = decryptPassword, status = UserStatus.FREE, reserved = false)
         userRepository.save(user)
         val userId = userRepository.findByName(name).userID
         val token = registerToRongCloud(userId.toString(),name,"null")

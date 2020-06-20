@@ -42,7 +42,7 @@ class ReservationController {
                        pair: Boolean, hang: Boolean, subject: String?,
                         targetgender: Boolean?, selfgender: Boolean?, companion: Int?): Int {
         //psd为url里面写的，@Param是注明对应的column
-        val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
+        val reservation = Reservation(0, userid, seatid, SimpleDateFormat("yyyy-MM-dd").format(Date()), starttime, endtime,
                 pair, hang, subject, targetgender, selfgender, companion)
         reservationRepository.save(reservation)
         return reservation.reservationid
