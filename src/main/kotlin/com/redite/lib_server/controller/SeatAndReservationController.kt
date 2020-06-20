@@ -132,6 +132,7 @@ class SeatAndReservationController {
              targetgender: Boolean?, selfgender: Boolean?, companion: Int?): String {
         val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
                 pair, hang, subject, targetgender, selfgender, companion)
+        reservationRepository.save(reservation)
         seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime)
         if (hang) {
             val adjacentid = if (seatid % 2 == 0)seatid-1 else seatid+1
