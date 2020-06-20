@@ -61,6 +61,7 @@ class SeatAndReservationController {
         return "revise succeeded!"
     }
 
+    // 整个扫码流程需要下面三个函数
     @RequestMapping("tryoccupyseat")
     fun tryoccupyseat(userid: Int, seatid: Int, now: Int): String{
         val seat = seatRepository.findBySeatID(seatid)
@@ -125,6 +126,22 @@ class SeatAndReservationController {
     fun occupySeat(seatid: Int, userid:Int): String { //成功占座且不需提醒
         userRepository.updateStatusByID(userid, UserStatus.ACTIVE)
         seatRepository.updateSeatStatusWhenOccupy(seatid)
+        return "Succeed"
+    }
+
+    // 预定选座后的流程
+    @RequestMapping("book")
+    fun book(userid: Int, seatid: Int, starttime: Int, endtime: Int,
+             pair: Boolean, hang: Boolean, wait: Boolean, subject: String?,
+             targetgender: Boolean?, selfgender: Boolean?, companion: Int?): String {
+        val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
+                pair, hang, subject, targetgender, selfgender, companion)
+        val id = reservation.reservationid
+        seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime, id)
+        if (wait) {
+            val adjacentid = if (id % 2 == 0)id-1 else id+1
+            seatRepository.updateSeatStatusWhenAdjacentBeReserved(seatid)
+        }
         return "Succeed"
     }
 }
