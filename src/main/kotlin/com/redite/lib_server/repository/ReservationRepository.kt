@@ -13,7 +13,7 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     fun findByReservationid(reservationID: Int): Reservation
 
     @Query("from Reservation r where r.userID = :userID order by r.ordertime DESC")
-    fun findReservationsByUserID(@Param("userID") userID: Int): MutableList<Reservation>
+    fun findReservationsByUserID(@Param("userID")userID: Int): MutableList<Reservation>
 
     @Query("select r.ordertime from Reservation r where r.userID = :userid")
     fun findDatesByUserID(@Param("userid") userid: Int): MutableList<Date>
@@ -56,7 +56,14 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
 
     @Transactional
     @Modifying
+    @Query("delete from Reservation r where r.seatID = :seatid and r.starttime < :starttime")
+    fun deleteBySeatIDAndStarttime(@Param("seatid") seatid: Int, @Param("starttime") starttime: Int)
+
+    @Transactional
+    @Modifying
     @Query("delete from Reservation r where r.reservationid = :reservationid")
     fun deleteByReservationid(@Param("reservationid") reservationID: Int)
 
+    @Query("from Reservation r where r.seatID = :seatID and r.starttime = :starttime and r.ordertime = :date")
+    fun findBySeatIDAndStarttimeAndDate(@Param("seatID") seatid: Int, @Param("starttime") starttime: Int, @Param("data")date: String): Reservation
 }

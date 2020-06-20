@@ -74,6 +74,10 @@ class ReservationController {
         return reservationRepository.findDatesByUserID(userid)
     }
 
+    @RequestMapping("/deletebyreservationid")
+    fun deleteByReservationid(reservationid: Int) {
+        reservationRepository.deleteByReservationid(reservationid)
+    }
 
 
 

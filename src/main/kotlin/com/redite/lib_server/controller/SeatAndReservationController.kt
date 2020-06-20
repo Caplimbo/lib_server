@@ -3,6 +3,7 @@ package com.redite.lib_server.controller
 import com.redite.lib_server.entity.Reservation
 import com.redite.lib_server.others.SeatStatus
 import com.redite.lib_server.others.UserStatus
+import com.redite.lib_server.others.getSpecifiedDayBefore
 import com.redite.lib_server.repository.ReservationRepository
 import com.redite.lib_server.repository.SeatRepository
 import com.redite.lib_server.repository.UserRepository
@@ -56,8 +57,9 @@ class SeatAndReservationController {
     @RequestMapping("deletebyreservationid")
     fun deleteOrderAndResetSeatStatusByReservationID(reservationid: Int): String {
         val reservation = reservationRepository.findByReservationid(reservationid)
+        val seatid = reservation.seatID
         reservationRepository.delete(reservation)
-        seatRepository.resetSeatByReservationID(reservationid)
+        seatRepository.resetSeatByIDAndTime(seatid, reservation.starttime, reservation.endtime)
         return "revise succeeded!"
     }
 
@@ -80,31 +82,25 @@ class SeatAndReservationController {
             return if (s1 == 0 && s2 == 0 && e1 == 0 && e2 == 0) {
                 // 没有预定，直接成功占座，修改用户状态
                 occupySeat(seatid, userid)
-            } else if (s1 == 0 && e1 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s2, e2, seat.reservationid2, now)
-            else if (s2 == 0 && e2 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s1, e1, seat.reservationid1, now)
+            } else if (s1 == 0 && e1 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s2, e2, now)
+            else if (s2 == 0 && e2 == 0) findResultByStartAndEndAndSeatId(userid, seatid, s1, e1, now)
             else {
-                if (minOf(e1, e2) <= now){
-                    if (e1 < e2) findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), seat.reservationid2, now)
-                    else findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), seat.reservationid1, now)
-                }
-
+                if (minOf(e1, e2) <= now) findResultByStartAndEndAndSeatId(userid, seatid, maxOf(s1, s2), maxOf(e1, e2), now)
                 else {
                     if (minOf(s1, s2) <= now - 1) maxOf(s1, s2).toString()
-                    else{
-                        if (e1 < e2) findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1, e2),seat.reservationid1, now)
-                        else findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1, e2),seat.reservationid2, now)
-                    }
+                    else findResultByStartAndEndAndSeatId(userid, seatid, minOf(s1, s2), minOf(e1, e2), now)
                 }
             }
         }
     }
 
-    fun findResultByStartAndEndAndSeatId(userid: Int, seatid: Int, starttime: Int, endtime: Int, reservationid: Int, now:Int): String {
+    fun findResultByStartAndEndAndSeatId(userid: Int, seatid: Int, starttime: Int, endtime: Int, now:Int): String {
         if (endtime <= now) { //前一个订单已经结束，占座
             return occupySeat(seatid, userid)
         }
         else {
-            val reservation = reservationRepository.findByReservationid(reservationid)
+            val date = getSpecifiedDayBefore(Date().toString())
+            val reservation = reservationRepository.findBySeatIDAndStarttimeAndDate(seatid, starttime, date)
             return when {
                 reservation.userID == userid -> { //自己的预订，直接占座
                     occupySeat(seatid, userid)
@@ -132,15 +128,14 @@ class SeatAndReservationController {
     // 预定选座后的流程
     @RequestMapping("book")
     fun book(userid: Int, seatid: Int, starttime: Int, endtime: Int,
-             pair: Boolean, hang: Boolean, wait: Boolean, subject: String?,
+             pair: Boolean, hang: Boolean, subject: String?,
              targetgender: Boolean?, selfgender: Boolean?, companion: Int?): String {
         val reservation = Reservation(0, userid, seatid, Date(), starttime, endtime,
                 pair, hang, subject, targetgender, selfgender, companion)
-        val id = reservation.reservationid
-        seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime, id)
-        if (wait) {
-            val adjacentid = if (id % 2 == 0)id-1 else id+1
-            seatRepository.updateSeatStatusWhenAdjacentBeReserved(seatid)
+        seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime)
+        if (hang) {
+            val adjacentid = if (seatid % 2 == 0)seatid-1 else seatid+1
+            seatRepository.updateSeatStatusWhenAdjacentBeReserved(adjacentid)
         }
         return "Succeed"
     }
