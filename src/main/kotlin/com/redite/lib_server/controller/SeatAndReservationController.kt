@@ -134,10 +134,17 @@ class SeatAndReservationController {
                 pair, hang, subject, targetgender, selfgender, companion)
         reservationRepository.save(reservation)
         seatRepository.updateSeatStatusWhenBook(seatid, starttime, endtime)
+        userRepository.updateReservedByID(userid, true)
         if (hang) {
             val adjacentid = if (seatid % 2 == 0)seatid-1 else seatid+1
             seatRepository.updateSeatStatusWhenAdjacentBeReserved(adjacentid)
         }
         return "Succeed"
+    }
+
+    @RequestMapping("deletereservation")
+    fun deleteReservation(userid: Int, reservationid: Int) {
+        reservationRepository.deleteByReservationid(reservationid)
+        userRepository.updateReservedByID(userid, false)
     }
 }

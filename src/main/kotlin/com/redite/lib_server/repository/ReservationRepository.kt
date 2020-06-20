@@ -16,7 +16,7 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     fun findReservationsByUserID(@Param("userID")userID: Int): MutableList<Reservation>
 
     @Query("select r.ordertime from Reservation r where r.userID = :userid")
-    fun findDatesByUserID(@Param("userid") userid: Int): MutableList<Date>
+    fun findDatesByUserID(@Param("userid") userid: Int): MutableList<String>
 
     @Query("select r.companion from Reservation r where r.userID = :userid")
     fun findCompanionsByUserID(@Param("userid") userid: Int): MutableList<Int>

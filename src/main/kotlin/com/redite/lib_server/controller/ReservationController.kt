@@ -2,6 +2,7 @@ package com.redite.lib_server.controller
 
 import com.redite.lib_server.entity.Reservation
 import com.redite.lib_server.repository.ReservationRepository
+import com.redite.lib_server.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -13,6 +14,7 @@ import java.util.*
 class ReservationController {
     @Autowired
     lateinit var reservationRepository: ReservationRepository
+
 
     // 根据时段、性别、科目筛选
     @RequestMapping("/getreservation")
@@ -70,7 +72,7 @@ class ReservationController {
     }
 
     @RequestMapping("/finddatesbyuserid")
-    fun findDatesByUserID(userid: Int): MutableList<Date> {
+    fun findDatesByUserID(userid: Int): MutableList<String> {
         return reservationRepository.findDatesByUserID(userid)
     }
 

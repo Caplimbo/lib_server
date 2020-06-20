@@ -28,6 +28,8 @@ data class User(
         var favorsubject: String? = "",
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
-        var status: UserStatus
+        var status: UserStatus,
+        @Column(nullable = false)
+        var reserved: Boolean = false
 
 )
